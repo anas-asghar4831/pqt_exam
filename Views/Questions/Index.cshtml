@@ -1,0 +1,29 @@
+@using exam.ViewModels
+@model List<QuestionViewModel>
+
+<h2>Questions</h2>
+
+@foreach (var question in Model)
+{
+    <div class="question">
+        <h3>@question.QuestionDescription</h3>
+        <p><strong>Case Study:</strong> @question.CaseStudyName</p>
+        <p><strong>Case Study Description:</strong> @question.CaseStudyDescription</p>
+        <p><strong>Type:</strong> @question.QuestionType</p>
+        <p><strong>Extra Context:</strong> @question.ExtraContext</p>
+
+        <h4>Options:</h4>
+        <ul>
+            @foreach (var option in question.Options)
+            {
+                <li>
+                    @option.OptionDescription
+                    @if (option.IsAnswer)
+                    {
+                        <strong>(Correct Answer)</strong>
+                    }
+                </li>
+            }
+        </ul>
+    </div>
+}
