@@ -1,4 +1,66 @@
-@using exam.Helpers
+ @* @using exam.Helpers
+ @using exam.ViewModels
+ @model List<CaseStudyViewModel>
+
+ @{
+     int questionNumber = 1;
+ }
+
+ <h1 class="text-5xl font-bold text-center mb-6">Exam Questions</h1>
+
+ @foreach (var caseStudy in Model)
+ {
+     <div class="flex-col flex gap-1">
+         <h2 class="text-2xl font-bold">Case Study</h2>
+         <h3 class="text-xl font-medium mt-1">@caseStudy.CaseStudyName</h3>
+         <p class="text-base text-balance">@caseStudy.CaseStudyDescription</p>
+     </div>
+
+     <h2 class="text-2xl font-bold mt-1">Questions</h2>
+
+     @foreach (var question in caseStudy.Questions)
+     {
+         <div class="my-4">
+             <hr />
+         </div>
+         <h3 class="text-xl font-medium my-2">@(questionNumber++). @question.QuestionDescription</h3>
+
+         @if (!string.IsNullOrEmpty(question.ExtraContext))
+         {
+             <p><strong>Extra Context:</strong> @question.ExtraContext</p>
+         }
+
+         <div class="flex gap-y-1 gap-4 my-1 flex-wrap">
+             <p class="text-nowrap inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset">@question.Competency.CompetencyName</p>
+             <p class="text-nowrap inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset">@question.Skill.SkillName</p>
+             <p class="text-nowrap inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset">@question.SubSkill.SubSkillName</p>
+             <p class="text-nowrap inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset"> @question.QuestionType.GetEnumDescription()</p>
+
+         </div>
+         @if (question.Options.Any())
+         {
+             <h4 class="text-base font-regular my-1"><strong>Options</strong></h4>
+             <ol class="list-[lower-alpha] pl-8 font-bold">
+                 @foreach (var option in question.Options.OrderBy(o => o.OptionId))
+                 {
+                     <li><p class="font-normal">@option.OptionDescription</p></li>
+                 }
+             </ol>
+
+             <h4 class="text-base font-regular my-1"><strong>Correct Answer</strong></h4>
+             <ol class="list-[lower-alpha] pl-8 font-bold">
+                 @foreach (var option in question.Options.Where(o => o.IsAnswer).OrderBy(o => o.OptionSortId))
+                 {
+                     <li><p class="font-normal">@option.OptionDescription</p></li>
+                 }
+             </ol>
+         }
+
+        
+     }
+ }
+ *@
+ @using exam.Helpers
 @using exam.ViewModels
 @model List<CaseStudyViewModel>
 
@@ -6,56 +68,55 @@
     int questionNumber = 1;
 }
 
-<h1 class="text-5xl font-bold text-center mb-6">Exam Questions</h1>
+<div class="container mx-auto p-12 bg-white shadow-xl rounded-lg max-w-4xl print:p-0 print:shadow-none print:max-w-none print:rounded-none">
+    <h1 class="text-4xl font-extrabold text-center text-gray-800 mb-12 border-b-4 pb-4 uppercase">Exam</h1>
 
-@foreach (var caseStudy in Model)
-{
-    <div class="flex-col flex gap-1">
-        <h2 class="text-2xl font-bold">Case Study</h2>
-        <h3 class="text-xl font-medium mt-1">@caseStudy.CaseStudyName</h3>
-        <p class="text-base text-balance">@caseStudy.CaseStudyDescription</p>
-    </div>
-
-    <h2 class="text-2xl font-bold mt-1">Questions</h2>
-
-    @foreach (var question in caseStudy.Questions)
+    @foreach (var caseStudy in Model)
     {
-        <div class="my-4">
-            <hr />
+        <div class="mb-12 p-8 bg-gray-100 rounded-lg shadow">
+            <h2 class="text-2xl font-bold text-gray-900 mb-3 capitalize">Case Study</h2>
+            <h3 class="text-xl font-semibold text-gray-700 mb-3 capitalize">@caseStudy.CaseStudyName</h3>
+            <p class="text-gray-600 text-lg leading-relaxed normal-case">@caseStudy.CaseStudyDescription</p>
         </div>
-        <h3 class="text-xl font-medium my-2">@(questionNumber++). @question.QuestionDescription</h3>
 
-        @if (!string.IsNullOrEmpty(question.ExtraContext))
+        <h2 class="text-2xl font-bold text-gray-900 mb-8 capitalize">Questions</h2>
+
+        @foreach (var question in caseStudy.Questions)
         {
-            <p><strong>Extra Context:</strong> @question.ExtraContext</p>
-        }
+            <div class="border-t border-gray-300 pt-8 mt-8">
+                <h3 class="text-xl font-medium text-gray-800 mb-4 normal-case">@(questionNumber++). @question.QuestionDescription</h3>
 
-        <div class="flex gap-y-1 gap-4 my-1 flex-wrap">
-            <p class="text-nowrap inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset">@question.Competency.CompetencyName</p>
-            <p class="text-nowrap inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset">@question.Skill.SkillName</p>
-            <p class="text-nowrap inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset">@question.SubSkill.SubSkillName</p>
-            <p class="text-nowrap inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset"> @question.QuestionType.GetEnumDescription()</p>
-
-        </div>
-        @if (question.Options.Any())
-        {
-            <h4 class="text-base font-regular my-1"><strong>Options</strong></h4>
-            <ol class="list-[lower-alpha] pl-8 font-bold">
-                @foreach (var option in question.Options.OrderBy(o => o.OptionId))
+                @if (!string.IsNullOrEmpty(question.ExtraContext))
                 {
-                    <li><p class="font-normal">@option.OptionDescription</p></li>
+                    <p class="text-gray-600 mb-6 normal-case"><strong class="uppercase">Extra Context:</strong> @question.ExtraContext</p>
                 }
-            </ol>
 
-            <h4 class="text-base font-regular my-1"><strong>Correct Answer</strong></h4>
-            <ol class="list-[lower-alpha] pl-8 font-bold">
-                @foreach (var option in question.Options.Where(o => o.IsAnswer).OrderBy(o => o.OptionSortId))
+                <div class="flex flex-wrap gap-3 mb-6">
+                    <span class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg text-sm font-semibold capitalize">@question.Competency.CompetencyName</span>
+                    <span class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg text-sm font-semibold capitalize">@question.Skill.SkillName</span>
+                    <span class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg text-sm font-semibold capitalize">@question.SubSkill.SubSkillName</span>
+                    <span class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg text-sm font-semibold capitalize">@question.QuestionType.GetEnumDescription()</span>
+                </div>
+
+                @if (question.Options.Any())
                 {
-                    <li><p class="font-normal">@option.OptionDescription</p></li>
-                }
-            </ol>
-        }
+                    <h4 class="text-lg font-semibold text-gray-700 mt-6 capitalize">Options</h4>
+                    <ol class="list-[lower-alpha] pl-8 text-gray-800 font-medium space-y-3 normal-case">
+                        @foreach (var option in question.Options.OrderBy(o => o.OptionId))
+                        {
+                            <li class="text-gray-700 font-normal">@option.OptionDescription</li>
+                        }
+                    </ol>
 
-        
+                    <h4 class="text-lg font-semibold text-green-700 mt-8 capitalize">Correct Answer</h4>
+                    <ol class="list-disc pl-8 text-green-700 font-medium space-y-3 normal-case">
+                        @foreach (var option in question.Options.Where(o => o.IsAnswer).OrderBy(o => o.OptionSortId))
+                        {
+                            <li class="text-green-700 font-normal">@option.OptionDescription</li>
+                        }
+                    </ol>
+                }
+            </div>
+        }
     }
-}
+</div>
