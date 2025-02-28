@@ -1,29 +1,61 @@
+@using exam.Helpers
 @using exam.ViewModels
-@model List<QuestionViewModel>
+@model List<CaseStudyViewModel>
 
-<h2>Questions</h2>
+@{
+    int questionNumber = 1;
+}
 
-@foreach (var question in Model)
+<h1 class="text-5xl font-bold text-center mb-6">Exam Questions</h1>
+
+@foreach (var caseStudy in Model)
 {
-    <div class="question">
-        <h3>@question.QuestionDescription</h3>
-        <p><strong>Case Study:</strong> @question.CaseStudyName</p>
-        <p><strong>Case Study Description:</strong> @question.CaseStudyDescription</p>
-        <p><strong>Type:</strong> @question.QuestionType</p>
-        <p><strong>Extra Context:</strong> @question.ExtraContext</p>
-
-        <h4>Options:</h4>
-        <ul>
-            @foreach (var option in question.Options)
-            {
-                <li>
-                    @option.OptionDescription
-                    @if (option.IsAnswer)
-                    {
-                        <strong>(Correct Answer)</strong>
-                    }
-                </li>
-            }
-        </ul>
+    <div class="flex-col flex gap-1">
+        <h2 class="text-2xl font-bold">Case Study</h2>
+        <h3 class="text-xl font-medium mt-1">@caseStudy.CaseStudyName</h3>
+        <p class="text-base text-balance">@caseStudy.CaseStudyDescription</p>
     </div>
+
+    <h2 class="text-2xl font-bold mt-1">Questions</h2>
+
+    @foreach (var question in caseStudy.Questions)
+    {
+        <div class="my-4">
+            <hr />
+        </div>
+        <h3 class="text-xl font-medium my-2">@(questionNumber++). @question.QuestionDescription</h3>
+
+        @if (!string.IsNullOrEmpty(question.ExtraContext))
+        {
+            <p><strong>Extra Context:</strong> @question.ExtraContext</p>
+        }
+
+        <div class="flex gap-y-1 gap-4 my-1 flex-wrap">
+            <p class="text-nowrap inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset">@question.Competency.CompetencyName</p>
+            <p class="text-nowrap inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset">@question.Skill.SkillName</p>
+            <p class="text-nowrap inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset">@question.SubSkill.SubSkillName</p>
+            <p class="text-nowrap inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset"> @question.QuestionType.GetEnumDescription()</p>
+
+        </div>
+        @if (question.Options.Any())
+        {
+            <h4 class="text-base font-regular my-1"><strong>Options</strong></h4>
+            <ol class="list-[lower-alpha] pl-8 font-bold">
+                @foreach (var option in question.Options.OrderBy(o => o.OptionId))
+                {
+                    <li><p class="font-normal">@option.OptionDescription</p></li>
+                }
+            </ol>
+
+            <h4 class="text-base font-regular my-1"><strong>Correct Answer</strong></h4>
+            <ol class="list-[lower-alpha] pl-8 font-bold">
+                @foreach (var option in question.Options.Where(o => o.IsAnswer).OrderBy(o => o.OptionSortId))
+                {
+                    <li><p class="font-normal">@option.OptionDescription</p></li>
+                }
+            </ol>
+        }
+
+        
+    }
 }

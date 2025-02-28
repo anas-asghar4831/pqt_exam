@@ -13,7 +13,7 @@ public class QuestionsController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var questions = await _questionRepository.GetQuestionsAsync();
+        var questions = await _questionRepository.GetCaseStudiesWithQuestionsAsync();
         return View(questions);
     }
 }

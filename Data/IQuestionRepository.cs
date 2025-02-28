@@ -1,8 +1,8 @@
-using exam.ViewModels;
+﻿using exam.ViewModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 public interface IQuestionRepository
 {
-    Task<List<QuestionViewModel>> GetQuestionsAsync();
+    Task<List<CaseStudyViewModel>> GetCaseStudiesWithQuestionsAsync(); // ✅ Updated return type
 }
